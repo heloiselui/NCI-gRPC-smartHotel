@@ -1,0 +1,20 @@
+// bookRoom.proto
+syntax = "proto3";
+
+package hotel;
+
+service BookRoomService {
+  // Usando server streaming para exemplificar
+  rpc BookRoom (BookRoomRequest) returns (stream BookRoomResponse);
+}
+
+message BookRoomRequest {
+  string guestName = 1;
+  int32 numberOfNights = 2;
+}
+
+message BookRoomResponse {
+  bool success = 1;
+  string message = 2;
+  int32 bookingId = 3;
+}

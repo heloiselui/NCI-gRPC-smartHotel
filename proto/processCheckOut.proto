@@ -1,0 +1,21 @@
+// processCheckOut.proto
+syntax = "proto3";
+
+package hotel;
+
+service CheckOutService {
+  // Usando bidirectional streaming para exemplificar
+  rpc ProcessCheckOut (stream CheckOutRequest) returns (stream CheckOutResponse);
+}
+
+message CheckOutRequest {
+  int32 bookingId = 1;
+  int32 roomId = 2;
+  string query = 3;
+}
+
+message CheckOutResponse {
+  bool success = 1;
+  string message = 2;
+  float totalCost = 3;
+}

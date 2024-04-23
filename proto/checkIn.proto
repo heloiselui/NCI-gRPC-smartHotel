@@ -1,0 +1,20 @@
+// checkIn.proto
+syntax = "proto3";
+
+package hotel;
+
+service CheckInService {
+  // Usando client streaming para exemplificar
+  rpc CheckIn (stream CheckInRequest) returns (CheckInResponse);
+}
+
+message CheckInRequest {
+  int32 bookingId = 1;
+  string guestName = 2;
+}
+
+message CheckInResponse {
+  bool success = 1;
+  string message = 2;
+  int32 roomId = 3;
+}
