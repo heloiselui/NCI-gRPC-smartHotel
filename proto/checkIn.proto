@@ -4,7 +4,7 @@ syntax = "proto3";
 package hotel;
 
 service CheckInService {
-  // Usando client streaming para exemplificar
+  // Using client streaming to exemplify
   rpc CheckIn (stream CheckInRequest) returns (CheckInResponse);
 }
 

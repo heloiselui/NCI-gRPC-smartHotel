@@ -4,7 +4,7 @@ syntax = "proto3";
 package hotel;
 
 service CheckOutService {
-  // Usando bidirectional streaming para exemplificar
+  // Using bidirectional streaming to exemplify
   rpc ProcessCheckOut (stream CheckOutRequest) returns (stream CheckOutResponse);
 }
 
@@ -19,3 +19,4 @@ message CheckOutResponse {
   string message = 2;
   float totalCost = 3;
 }
+

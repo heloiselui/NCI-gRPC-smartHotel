@@ -4,7 +4,7 @@ syntax = "proto3";
 package hotel;
 
 service BookRoomService {
-  // Usando server streaming para exemplificar
+  // Using server streaming to exemplify
   rpc BookRoom (BookRoomRequest) returns (stream BookRoomResponse);
 }
 

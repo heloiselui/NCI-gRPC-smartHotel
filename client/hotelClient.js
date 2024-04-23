@@ -1,18 +1,22 @@
+// Import required modules
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 const readline = require('readline');
 const path = require('path');
 const crypto = require('crypto');  // For random ID generation
 
+// Create readline interface for user input/output
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
 
-const BOOK_ROOM_PROTO_PATH = path.join(__dirname, '..', 'proto', 'BookRoom.proto');
-const CHECK_IN_PROTO_PATH = path.join(__dirname, '..', 'proto', 'CheckIn.proto');
-const PROCESS_CHECK_OUT_PROTO_PATH = path.join(__dirname, '..', 'proto', 'ProcessCheckOut.proto');
+// Define paths to proto files
+const BOOK_ROOM_PROTO_PATH = path.join(__dirname, '..', 'proto', 'bookRoom.proto');
+const CHECK_IN_PROTO_PATH = path.join(__dirname, '..', 'proto', 'checkIn.proto');
+const PROCESS_CHECK_OUT_PROTO_PATH = path.join(__dirname, '..', 'proto', 'processCheckOut.proto');
 
+// Load proto files and generate package definitions
 const bookRoomPackageDefinition = protoLoader.loadSync(BOOK_ROOM_PROTO_PATH, {
   keepCase: true, longs: String, enums: String, defaults: true, oneofs: true
 });
@@ -23,12 +27,15 @@ const processCheckOutPackageDefinition = protoLoader.loadSync(PROCESS_CHECK_OUT_
   keepCase: true, longs: String, enums: String, defaults: true, oneofs: true
 });
 
+// Extract service definitions from package definitions and create gRPC clients
 const bookRoomClient = new (grpc.loadPackageDefinition(bookRoomPackageDefinition).hotel).BookRoomService('localhost:50051', grpc.credentials.createInsecure());
 const checkInClient = new (grpc.loadPackageDefinition(checkInPackageDefinition).hotel).CheckInService('localhost:50051', grpc.credentials.createInsecure());
 const processCheckOutClient = new (grpc.loadPackageDefinition(processCheckOutPackageDefinition).hotel).CheckOutService('localhost:50051', grpc.credentials.createInsecure());
 
+// Initialize session data
 let sessionData = {};
 
+// Function to display the menu options
 function displayMenu() {
   console.log("\nWelcome to Smart Hotel");
   console.log("Menu Options:");
@@ -38,6 +45,7 @@ function displayMenu() {
   rl.question('Enter your choice: ', handleMenuOption);
 }
 
+// Function to handle user menu choice
 function handleMenuOption(option) {
   switch (option.trim()) {
     case '1':
@@ -55,6 +63,7 @@ function handleMenuOption(option) {
   }
 }
 
+// Function to handle booking process
 function performBooking() {
   console.log("Welcome to the Booking");
   rl.question('Enter your name: ', guestName => {
@@ -72,6 +81,7 @@ function performBooking() {
   });
 }
 
+// Function to handle check-in process
 function performCheckIn() {
   console.log("Welcome to the Check-in");
   const stream = checkInClient.CheckIn((error, response) => {
@@ -90,13 +100,14 @@ function performCheckIn() {
   });
 }
 
+// Function to handle check-out process
 function performCheckOut() {
   console.log("Welcome to the Check-out");
   rl.question('Enter your Booking ID: ', bookingId => {
     const request = { bookingId: parseInt(bookingId) };
     const stream = processCheckOutClient.ProcessCheckOut();
 
-    // Envie a solicitação para o servidor
+    // Send the request to the server
     stream.write(request);
 
     stream.on('data', (response) => {
@@ -104,7 +115,7 @@ function performCheckOut() {
         console.log(`Check-Out Successful for booking ID ${bookingId}`);
         console.log(`Guest: ${sessionData.guestName}`);
         console.log(`Room ID: ${sessionData.roomId}`);
-        console.log("Total cost: " + (sessionData.numberOfNights * 120)); // Corrigido aqui
+        console.log("Total cost: " + (sessionData.numberOfNights * 120)); // Corrected here
         rl.question('Select payment method:\n1) Credit Card\n2) Cash\nEnter your choice: ', paymentMethod => {
           const paymentMethodText = paymentMethod.trim() === '1' ? 'Credit Card' : 'Cash';
           console.log(`Payment successful with ${paymentMethodText}.`);
@@ -130,7 +141,7 @@ function performCheckOut() {
   });
 }
 
-
+// Function to handle the next action after each process
 function handleNextAction() {
   rl.question('Do you want to perform another action? (Y/N): ', answer => {
     if (answer.toLowerCase() === 'y') {
@@ -142,8 +153,10 @@ function handleNextAction() {
   });
 }
 
+// Main function to start the application
 function main() {
   displayMenu();
 }
 
+// Call the main function to start the application
 main();

@@ -8,6 +8,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {},
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.10.6",
+    "@grpc/proto-loader": "^0.7.12",
+    "crypto-js": "^4.2.0",
+    "readline-sync": "^1.4.10"
+  }
 }
