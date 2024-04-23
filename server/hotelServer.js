@@ -27,7 +27,7 @@ function bookRoom(call) {
   // Generate a random booking ID
   const bookingId = crypto.randomInt(1000, 9999);
   // Log the booking request details
-  console.log(`Booking request by ${call.request.roomId} for ${call.request.numberOfNights} nights.`);
+  console.log(`Booking request by ${call.request.guestName} for ${call.request.numberOfNights} nights.`);
   // Send a success response with the generated booking ID
   call.write({ success: true, message: "Booking Successful", bookingId: bookingId });
   // Close the call
